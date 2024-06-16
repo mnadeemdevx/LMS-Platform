@@ -101,3 +101,5 @@ const CreateCourse = () => {
 };
 
 export default CreateCourse;
+
+// pnpm dlx shadcn-ui@latest add toast

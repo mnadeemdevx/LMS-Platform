@@ -42,7 +42,7 @@ const CreateCourse = () => {
         try {
             const response = await axios.post('/api/courses232', values);
             router.push(`/teacher/courses/${response.data.id}`);
-            toast.success('Course created successfully!');
+            toast.success('Course created!');
         } catch {
             toast.error('Something went wrong!');
         }

@@ -9,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { Pencil } from 'lucide-react';
+import { Course } from '@prisma/client';
 
 import {
     Form,
@@ -22,9 +23,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 
 interface DescriptionFormProps {
-    initialData: {
-        description: string;
-    };
+    initialData: Course;
     courseId: string;
 }
 
@@ -43,7 +42,9 @@ const DescriptionForm = ({ initialData, courseId }: DescriptionFormProps) => {
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: initialData,
+        defaultValues: {
+            description: initialData?.description || '',
+        },
     });
 
     const { isSubmitting, isValid } = form.formState;
@@ -62,7 +63,7 @@ const DescriptionForm = ({ initialData, courseId }: DescriptionFormProps) => {
     return (
         <div className="mt-6 border bg-slate-100 rounded-md p-4">
             <div className="font-medium flex items-center justify-between">
-                Course Description
+                Course description
                 <Button variant="ghost" onClick={toggleEdit}>
                     {isEditing ? (
                         <>Cancel</>

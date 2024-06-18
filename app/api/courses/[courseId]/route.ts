@@ -1,8 +1,6 @@
-import { NextResponse } from 'next/server';
-
-import { auth } from '@clerk/nextjs/server';
-
-import { db } from '@/lib/db';
+import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
+import { db } from "@/lib/db";
 
 export async function PATCH(
     req: Request,
@@ -14,7 +12,7 @@ export async function PATCH(
         const values = await req.json();
 
         if (!userId) {
-            return new NextResponse('Unauthorized', { status: 401 });
+            return new NextResponse("Unauthorized", { status: 401 });
         }
 
         const course = await db.course.update({
@@ -24,7 +22,7 @@ export async function PATCH(
 
         return NextResponse.json(course);
     } catch (err) {
-        console.log('COURSE_ID', err);
-        return new NextResponse('Internal Error', { status: 500 });
+        console.log("COURSE_ID", err);
+        return new NextResponse("Internal Error", { status: 500 });
     }
 }

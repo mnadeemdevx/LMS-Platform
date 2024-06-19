@@ -9,6 +9,68 @@ const { video } = new Mux({
     tokenSecret: process.env.MUX_TOKEN_SECRET!,
 });
 
+export async function DELETE(
+    req: Request,
+    { params }: { params: { courseId: string; chapterId: string } },
+) {
+    try {
+        const { userId } = auth();
+
+        if (!userId) {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
+
+        const { courseId, chapterId } = params;
+
+        const courseOwner = await db.course.findUnique({
+            where: { id: courseId, userId },
+        });
+
+        if (!courseOwner) {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
+
+        const chapter = await db.chapter.findUnique({
+            where: { id: chapterId, courseId },
+        });
+
+        if (!chapter) {
+            return new NextResponse("Chapter not found", { status: 404 });
+        }
+
+        if (chapter.videoUrl) {
+            const existingMuxData = await db.muxData.findFirst({
+                where: { chapterId },
+            });
+
+            if (existingMuxData) {
+                await video.assets.delete(existingMuxData.assetId);
+                await db.muxData.delete({
+                    where: { id: existingMuxData.id },
+                });
+            }
+        }
+        const deletedChapter = await db.chapter.delete({
+            where: { id: chapterId },
+        });
+
+        const publishedChapterCourse = await db.chapter.findMany({
+            where: { courseId, isPublished: true },
+        });
+
+        if (!publishedChapterCourse.length) {
+            await db.course.update({
+                where: { id: courseId },
+                data: { isPublished: false },
+            });
+        }
+
+        return NextResponse.json(deletedChapter);
+    } catch (err) {
+        console.log("[COURSES_CHAPTER_ID]", err);
+        return new NextResponse("Internal Error", { status: 500 });
+    }
+}
 export async function PATCH(
     req: Request,
     { params }: { params: { courseId: string; chapterId: string } },
@@ -16,8 +78,6 @@ export async function PATCH(
     try {
         const { userId } = auth();
         const { isPublished, ...values } = await req.json();
-
-        console.log("vaues", values);
 
         if (!userId) {
             return new NextResponse("Unauthorized", { status: 401 });
@@ -37,7 +97,7 @@ export async function PATCH(
             where: { id: chapterId, courseId },
             data: { ...values },
         });
-        // TODO; handle video uploads
+
         if (values.videoUrl) {
             const existingMuxData = await db.muxData.findFirst({
                 where: { chapterId },
@@ -49,21 +109,22 @@ export async function PATCH(
                     where: { id: existingMuxData.id },
                 });
             }
+
+            const asset = await video.assets.create({
+                input: [{ url: values.videoUrl }],
+                playback_policy: ["public"],
+                test: false,
+            });
+
+            await db.muxData.create({
+                data: {
+                    chapterId,
+                    assetId: asset.id,
+                    playbackId: asset.playback_ids?.[0].id,
+                },
+            });
         }
 
-        const asset = await video.assets.create({
-            input: [{ url: values.videoUrl }],
-            playback_policy: ["public"],
-            test: false,
-        });
-
-        await db.muxData.create({
-            data: {
-                chapterId,
-                assetId: asset.id,
-                playbackId: asset.playback_ids?.[0].id,
-            },
-        });
         return NextResponse.json(chapter);
     } catch (err) {
         console.log("[COURSES_CHAPTER_ID]", err);

@@ -55,7 +55,7 @@ export const columns: ColumnDef<Course>[] = [
             const price = parseFloat(row.getValue("price")) || 0;
             const formattedPrice = formatPrice(price);
 
-            return <>{formattedPrice}</>;
+            return <p>{formattedPrice}</p>;
         },
     },
     {

@@ -8,8 +8,8 @@ import {
     ListChecks,
 } from "lucide-react";
 
-import { db } from "@/lib/db";
 import { IconBadge } from "@/components/icon-badge";
+import { db } from "@/lib/db";
 
 import TitleForm from "./_components/title-form";
 import DescriptionForm from "./_components/description-form";

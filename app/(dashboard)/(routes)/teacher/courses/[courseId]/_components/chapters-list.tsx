@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { Chapter } from "@prisma/client";
 import {
     DragDropContext,
@@ -10,8 +11,8 @@ import {
 } from "@hello-pangea/dnd";
 import { Grip, Pencil } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 interface ChaptersListProps {
     items: Chapter[];
@@ -31,12 +32,42 @@ const ChaptersList = ({ items, onReorder, onEdit }: ChaptersListProps) => {
         setChapters(items);
     }, [items]);
 
+    const onDragEnd = (result: DropResult) => {
+        if (!result.destination) {
+            return;
+        }
+
+        const items = Array.from(chapters);
+        const [reorderedItem] = items.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, reorderedItem);
+
+        const startIndex = Math.min(
+            result.source.index,
+            result.destination.index,
+        );
+        const endIndex = Math.max(
+            result.source.index,
+            result.destination.index,
+        );
+
+        const updatedChapters = items.slice(startIndex, endIndex + 1);
+
+        setChapters(items);
+
+        const bulkUpdateData = updatedChapters.map((chapter) => ({
+            id: chapter.id,
+            position: items.findIndex((item) => item.id === chapter.id),
+        }));
+
+        onReorder(bulkUpdateData);
+    };
+
     if (!isMounted) {
         return null;
     }
 
     return (
-        <DragDropContext onDragEnd={() => {}}>
+        <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="chapters">
                 {(provided) => (
                     <div {...provided.droppableProps} ref={provided.innerRef}>

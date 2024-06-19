@@ -24,7 +24,7 @@ export async function POST(
         }
 
         const lastChapter = await db.chapter.findFirst({
-            where: { courseId },
+            where: { courseId: courseId },
             orderBy: { position: "desc" },
         });
 
@@ -32,15 +32,15 @@ export async function POST(
 
         const chapter = await db.chapter.create({
             data: {
-                courseId,
-                title,
+                courseId: courseId,
+                title: title,
                 position: newPosition,
             },
         });
 
         return NextResponse.json(chapter);
     } catch (err) {
-        console.log("CHAPTERS", err);
+        console.log("[CHAPTERS]", err);
         return new NextResponse("Internal Error", { status: 500 });
     }
 }

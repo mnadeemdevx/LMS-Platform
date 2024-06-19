@@ -7,6 +7,8 @@ import { Trash } from "lucide-react";
 import toast from "react-hot-toast";
 import axios from "axios";
 
+import { useConfettiStore } from "@/hooks/use-confetti-store";
+
 import { Button } from "@/components/ui/button";
 import ConfirmModal from "@/components/modals/confirm-modal";
 
@@ -23,8 +25,10 @@ const ChapterActions = ({
     chapterId,
     isPublished,
 }: ChapterActionsProps) => {
-    const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
+    const [isLoading, setIsLoading] = useState(false);
+
+    const confetti = useConfettiStore();
 
     const onClick = async () => {
         try {
@@ -40,6 +44,7 @@ const ChapterActions = ({
                     `/api/courses/${courseId}/chapters/${chapterId}/publish`,
                 );
                 toast.success("Chapter published");
+                confetti.onOpen();
             }
             router.refresh();
         } catch {

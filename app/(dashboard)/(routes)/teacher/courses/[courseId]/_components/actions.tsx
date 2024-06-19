@@ -21,6 +21,7 @@ interface ActionsProps {
 const Actions = ({ disabled, courseId, isPublished }: ActionsProps) => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+
     const confetti = useConfettiStore();
 
     const onClick = async () => {
@@ -46,8 +47,8 @@ const Actions = ({ disabled, courseId, isPublished }: ActionsProps) => {
             setIsLoading(true);
             await axios.delete(`/api/courses/${courseId}`);
             toast.success("Course deleted");
-            router.refresh();
             router.push(`/teacher/courses`);
+            router.refresh();
         } catch {
             toast.error("Something went wrong");
         } finally {

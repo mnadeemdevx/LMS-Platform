@@ -54,7 +54,7 @@ export async function PATCH(
 
         return NextResponse.json(publishChapter);
     } catch (err) {
-        console.log("[COURSES_CHAPTER_ID]", err);
+        console.log("[CHAPTER_ID_PUBLISH]", err);
         return new NextResponse("Internal Error", { status: 500 });
     }
 }

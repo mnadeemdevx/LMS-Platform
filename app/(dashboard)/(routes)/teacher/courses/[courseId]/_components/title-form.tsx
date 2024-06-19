@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-import * as z from 'zod';
-import axios from 'axios';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
-import { Pencil } from 'lucide-react';
+import * as z from "zod";
+import axios from "axios";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { Pencil } from "lucide-react";
 
 import {
     Form,
@@ -18,9 +18,9 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from '@/components/ui/form';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface TitleFormProps {
     initialData: {
@@ -31,7 +31,7 @@ interface TitleFormProps {
 
 const formSchema = z.object({
     title: z.string().min(1, {
-        message: 'Title is required',
+        message: "Title is required",
     }),
 });
 const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
@@ -52,11 +52,11 @@ const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             await axios.patch(`/api/courses/${courseId}`, values);
-            toast.success('Course updated!');
+            toast.success("Course updated");
             toggleEdit();
             router.refresh();
         } catch {
-            toast.error('Something went wrong!');
+            toast.error("Something went wrong!");
         }
     };
 

@@ -7,6 +7,7 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 model Course {
@@ -22,7 +23,7 @@ model Course {
   category Category? @relation(fields: [categoryId], references: [id])
 
   chapters Chapter[]
-  attachments Attachment[]
+  attachments Attachment[] 
   purchases Purchase[]
 
   createdAt DateTime @default(now())
@@ -45,7 +46,6 @@ model Attachment {
   courseId String
   // Cascade means once course is deleted, the attachments will be deleted
   course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
-
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -111,6 +111,7 @@ model Purchase {
   updatedAt DateTime @updatedAt
 
   @@index([courseId])
+  @@unique([userId, courseId])
 }
 
 model StripeCustomer {

@@ -42,7 +42,8 @@ const CreateCourse = () => {
         try {
             const response = await axios.post("/api/courses", values);
             toast.success("Course created");
-            router.push(`/teacher/courses/${response.data.id}`);
+            router.push(`/teacher/courses`);
+            router.refresh();
         } catch {
             toast.error("Something went wrong");
         }
@@ -82,7 +83,7 @@ const CreateCourse = () => {
                             )}
                         />
                         <div className="flex items-center gap-x-2">
-                            <Link href="/">
+                            <Link href="/teacher/courses">
                                 <Button type="button" variant="ghost">
                                     Cancel
                                 </Button>

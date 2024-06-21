@@ -19,7 +19,7 @@ const CourseLayout = async ({
     const { userId } = auth();
 
     if (!userId) {
-        redirect("/");
+        return redirect("/");
     }
 
     const course = await db.course.findUnique({
@@ -44,7 +44,7 @@ const CourseLayout = async ({
     });
 
     if (!course) {
-        redirect("/");
+        return redirect("/");
     }
 
     const progressCount = await getProgress(userId, course.id);

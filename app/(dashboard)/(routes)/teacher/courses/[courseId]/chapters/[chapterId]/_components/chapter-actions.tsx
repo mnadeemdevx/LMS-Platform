@@ -44,7 +44,7 @@ const ChapterActions = ({
                     `/api/courses/${courseId}/chapters/${chapterId}/publish`,
                 );
                 toast.success("Chapter published");
-                confetti.onOpen();
+                // confetti.onOpen();
             }
             router.refresh();
         } catch {

@@ -13,7 +13,7 @@ const CoursesPage = async () => {
     const { userId } = auth();
 
     if (!userId) {
-        redirect("/");
+        return redirect("/");
     }
 
     const courses = await db.course.findMany({

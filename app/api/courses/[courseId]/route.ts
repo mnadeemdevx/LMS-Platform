@@ -18,7 +18,7 @@ export async function DELETE(
     try {
         const { userId } = auth();
 
-        if (!userId || !isTeacher(userId)) {
+        if (!userId) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
 
@@ -64,7 +64,7 @@ export async function PATCH(
         const { courseId } = params;
         const values = await req.json();
 
-        if (!userId || !isTeacher(userId)) {
+        if (!userId) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
 

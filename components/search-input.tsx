@@ -21,13 +21,16 @@ const SearchInput = () => {
     const currentCategoryId = searchParams.get("categoryId");
 
     useEffect(() => {
-        const url = qs.stringifyUrl({
-            url: pathname,
-            query: {
-                title: debouncedValue,
-                categoryId: currentCategoryId,
+        const url = qs.stringifyUrl(
+            {
+                url: pathname,
+                query: {
+                    categoryId: currentCategoryId,
+                    title: debouncedValue,
+                },
             },
-        });
+            { skipNull: true, skipEmptyString: true },
+        );
         router.push(url);
     }, [debouncedValue, currentCategoryId, router, pathname]);
     return (

@@ -11,7 +11,7 @@ import { db } from "@/lib/db";
 interface SearchPageProps {
     searchParams: {
         title: string;
-        catgoryId: string;
+        categoryId: string;
     };
 }
 const SearchPage = async ({ searchParams }: SearchPageProps) => {

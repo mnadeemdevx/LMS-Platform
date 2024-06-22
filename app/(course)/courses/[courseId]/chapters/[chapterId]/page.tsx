@@ -3,13 +3,15 @@ import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 
 import { File } from "lucide-react";
-import { getChapter } from "@/actions/get-chapter";
-import { Banner } from "@/components/banner";
 import { Separator } from "@/components/ui/separator";
 
+import { Preview } from "@/components/preview";
+import { Banner } from "@/components/banner";
 import { VideoPlayer } from "./_components/video-player";
 import { CourseEnrollButton } from "./_components/course-enroll-button";
-import { Preview } from "@/components/preview";
+import { CourseProgressButton } from "./_components/course-progress-button";
+
+import { getChapter } from "@/actions/get-chapter";
 
 const ChapterIdPage = async ({
     params,
@@ -62,7 +64,7 @@ const ChapterIdPage = async ({
                     <VideoPlayer
                         chapterId={params.chapterId}
                         title={chapter.title}
-                        courseId={params.chapterId}
+                        courseId={params.courseId}
                         nextChapterId={nextChapter?.id}
                         playbackId={muxData?.playbackId!}
                         isLocked={isLocked}
@@ -75,9 +77,13 @@ const ChapterIdPage = async ({
                             {chapter.title}
                         </h2>
                         {purchase ? (
-                            <></>
+                            <CourseProgressButton
+                                chapterId={params.chapterId}
+                                courseId={params.courseId}
+                                nextChapterId={nextChapter?.id}
+                                isCompleted={!!userProgress?.isCompleted}
+                            />
                         ) : (
-                            // TODO: add course progress button
                             <CourseEnrollButton
                                 courseId={params.courseId}
                                 price={course.price!}

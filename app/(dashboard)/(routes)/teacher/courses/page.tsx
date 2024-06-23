@@ -1,18 +1,18 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { auth } from "@clerk/nextjs/server";
 
-import { Button } from "@/components/ui/button";
-
 import { DataTable } from "./_components/data-table";
 import { columns } from "./_components/columns";
 import { db } from "@/lib/db";
+import { isTeacher } from "@/lib/teacher";
 
 const CoursesPage = async () => {
     const { userId } = auth();
 
-    if (!userId) {
+    if (!userId || !isTeacher(userId)) {
+        console.log("in here");
+
         return redirect("/");
     }
 

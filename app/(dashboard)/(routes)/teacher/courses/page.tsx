@@ -10,9 +10,8 @@ import { isTeacher } from "@/lib/teacher";
 const CoursesPage = async () => {
     const { userId } = auth();
 
-    if (!userId || !isTeacher(userId)) {
-        console.log("in here");
-
+    if (!userId) {
+        // console.log("in here");
         return redirect("/");
     }
 
